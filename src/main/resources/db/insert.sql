@@ -1,0 +1,2 @@
+-- insert into users (id, login, password) values (1, 'Anton', 'pass');
+-- insert into users (id, login, password) values (2, 'Irina', 'pass');
