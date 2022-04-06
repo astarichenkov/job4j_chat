@@ -1,6 +1,9 @@
-package ru.job4j.employees.domain;
+package ru.job4j.chat.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,12 +12,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-public class Person {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String login;
-    private String password;
+    private String role;
 }

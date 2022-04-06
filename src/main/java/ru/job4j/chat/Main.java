@@ -1,4 +1,4 @@
-package ru.job4j.employees;
+package ru.job4j.chat;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.boot.SpringApplication;
