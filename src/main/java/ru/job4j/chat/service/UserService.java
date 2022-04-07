@@ -1,4 +1,4 @@
-package ru.job4j.chat.Service;
+package ru.job4j.chat.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.chat.domain.User;

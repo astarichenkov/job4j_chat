@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.job4j.chat.Service.RoomService;
+import ru.job4j.chat.service.RoomService;
 import ru.job4j.chat.domain.Message;
 import ru.job4j.chat.domain.Room;
 

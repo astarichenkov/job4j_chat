@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends CrudRepository<Room, Long> {
 
-    @Query("select distinct r from Room r " +
-            "join fetch r.users u " +
-            "where u.id = :id")
+    @Query("select distinct r from Room r "
+            + "join fetch r.users u "
+            + "where u.id = :id")
     List<Room> findAllRoomsByUserId(@Param("id") Long id);
 }
