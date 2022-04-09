@@ -15,25 +15,20 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String login;
+    private String username;
     private String password;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "role_id")
     private Role role;
 
     public User() {
-        this.role = Role.of("USER");
+        this.role = Role.of(1L, "USER");
     }
 
-    public User(Long id) {
-        this.id = id;
-        this.role = Role.of("USER");
-    }
-
-    public User(String login, String password, Role role) {
-        this.login = login;
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
-        this.role = role;
+        this.role = Role.of(1L, "USER");
     }
 }

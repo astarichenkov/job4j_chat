@@ -32,4 +32,7 @@ public class UserService {
         users.delete(user);
     }
 
+    public User findByUsername(String username) {
+        return this.users.findByUsername(username);
+    }
 }

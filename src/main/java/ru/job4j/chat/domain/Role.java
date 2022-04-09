@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -20,11 +18,15 @@ public class Role {
 
     private String role;
 
-    public Role(String name) {
-        this.role = name;
+    public Role() {
     }
 
-    public static Role of(String name) {
-        return new Role(name);
+    public Role(Long id, String role) {
+        this.id = id;
+        this.role = role;
+    }
+
+    public static Role of(Long id, String name) {
+        return new Role(id, name);
     }
 }

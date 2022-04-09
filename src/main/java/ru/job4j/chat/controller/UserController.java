@@ -2,6 +2,7 @@ package ru.job4j.chat.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.chat.service.MessageService;
 import ru.job4j.chat.service.RoomService;
@@ -21,11 +22,19 @@ public class UserController {
     private final UserService users;
     private final RoomService rooms;
     private final MessageService messages;
+    private final BCryptPasswordEncoder encoder;
 
-    public UserController(UserService users, RoomService rooms, MessageService messages) {
+    public UserController(UserService users, RoomService rooms, MessageService messages, BCryptPasswordEncoder encoder) {
         this.users = users;
         this.rooms = rooms;
         this.messages = messages;
+        this.encoder = encoder;
+    }
+
+    @PostMapping("/sign-up")
+    public void signUp(@RequestBody User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        users.save(user);
     }
 
     @GetMapping("/")
