@@ -24,10 +24,10 @@ public class Room {
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    List<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Message> messages = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
 
     public void addMessage(Message message) {
         this.messages.add(message);
