@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -37,8 +38,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException {
         try {
-            User creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), User.class);
+            ru.job4j.chat.domain.User user = new ObjectMapper()
+                    .readValue(req.getInputStream(), ru.job4j.chat.domain.User.class);
+
+            UserDetails creds = User.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .roles("")
+                    .build();
 
             return auth.authenticate(
                     new UsernamePasswordAuthenticationToken(

@@ -25,7 +25,7 @@ public class RoomService {
     }
 
     public List<Room> findRoomsByUserId(Long id) {
-        return rooms.findAllRoomsByUserId(id);
+        return rooms.findByUsersIdIs(id);
     }
 
     public Room save(Room room) {
