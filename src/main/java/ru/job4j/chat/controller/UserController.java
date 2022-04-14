@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Message;
 import ru.job4j.chat.domain.Room;
 import ru.job4j.chat.domain.User;
+import ru.job4j.chat.dto.UserDto;
 import ru.job4j.chat.service.MessageService;
 import ru.job4j.chat.service.RoomService;
 import ru.job4j.chat.service.UserService;
@@ -73,6 +74,14 @@ public class UserController {
     public ResponseEntity<Void> update(@RequestBody User user) {
         userValidator.validateNameAndPassword(user);
         this.users.save(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/")
+    public ResponseEntity<Void> patch(@RequestBody UserDto userDto) {
+        User user = users.findByUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        users.save(user);
         return ResponseEntity.ok().build();
     }
 

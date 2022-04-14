@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.chat.domain.Room;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends CrudRepository<Room, Long> {
@@ -22,5 +23,7 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
     List<Room> findAllRoomsByUserIdGeneratedByIdea(Long id);
 
     List<Room> findByUsersIdIs(Long id);
+
+    Optional<Room> findByName(String name);
 
 }

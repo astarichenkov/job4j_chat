@@ -35,4 +35,8 @@ public class RoomService {
     public void delete(Room room) {
         this.rooms.delete(room);
     }
+
+    public Optional<Room> findByName(String name) {
+        return rooms.findByName(name);
+    }
 }
