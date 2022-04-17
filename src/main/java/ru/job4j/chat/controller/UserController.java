@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Message;
@@ -15,16 +16,20 @@ import ru.job4j.chat.dto.UserDto;
 import ru.job4j.chat.service.MessageService;
 import ru.job4j.chat.service.RoomService;
 import ru.job4j.chat.service.UserService;
+import ru.job4j.chat.validator.Operation;
 import ru.job4j.chat.validator.RoomValidator;
 import ru.job4j.chat.validator.UserValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/users")
 public class UserController {
 
@@ -48,12 +53,11 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
-        if (users.findByUsername(user.getUsername()) != null) {
+    public void signUp(@Valid @RequestBody UserDto userDto) {
+        if (users.findByUsername(userDto.getUsername()) != null) {
             throw new IllegalArgumentException("Username is busy");
         }
-        userValidator.validateNameAndPassword(user);
-        user.setPassword(encoder.encode(user.getPassword()));
+        User user = new User(userDto.getUsername(), encoder.encode(userDto.getPassword()));
         users.save(user);
     }
 
@@ -71,8 +75,8 @@ public class UserController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody User user) {
-        userValidator.validateNameAndPassword(user);
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid @RequestBody User user) {
         this.users.save(user);
         return ResponseEntity.ok().build();
     }
@@ -86,7 +90,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @Validated
+    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         User user = new User();
         user.setId(id);
         this.users.delete(user);
@@ -99,8 +104,8 @@ public class UserController {
     }
 
     @PostMapping("/{id}/rooms")
-    public ResponseEntity<Room> create(@RequestBody Room room, @PathVariable Long id) {
-        roomValidator.validate(room);
+    @Validated(Operation.OnCreate.class)
+    public ResponseEntity<Room> create(@Valid @RequestBody Room room, @PathVariable @Min(1) Long id) {
         User user = users.findById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "User is not found"
         ));
@@ -112,14 +117,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}/rooms/")
-    public ResponseEntity<Void> update(@RequestBody Room room) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid @RequestBody Room room) {
         roomValidator.validate(room);
         this.rooms.save(room);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/rooms/{rid}/")
-    public ResponseEntity<Void> delete(@PathVariable Long id, @PathVariable Long rid) {
+    @Validated
+    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id,
+                                       @PathVariable @Min(1) Long rid) {
         Room room = new Room();
         room.setId(rid);
         this.rooms.delete(room);
@@ -127,8 +135,9 @@ public class UserController {
     }
 
     @PostMapping("/{id}/rooms/{rid}/message")
+    @Validated(Operation.OnCreate.class)
     public ResponseEntity<Message> createMessage(@PathVariable Long id, @PathVariable Long rid,
-                                                 @RequestBody Message message) {
+                                                 @Valid @RequestBody Message message) {
         User user = users.findById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "User is not found"
         ));

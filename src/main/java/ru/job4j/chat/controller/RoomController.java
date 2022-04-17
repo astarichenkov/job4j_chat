@@ -2,16 +2,20 @@ package ru.job4j.chat.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Message;
 import ru.job4j.chat.domain.Room;
 import ru.job4j.chat.dto.RoomDto;
 import ru.job4j.chat.service.RoomService;
+import ru.job4j.chat.validator.Operation;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/rooms")
 public class RoomController {
     private final RoomService rooms;
@@ -43,7 +47,8 @@ public class RoomController {
     }
 
     @PatchMapping("/")
-    public Room patch(@RequestBody RoomDto roomDto) {
+    @Validated(Operation.OnUpdate.class)
+    public Room patch(@Valid @RequestBody RoomDto roomDto) {
         var opt = rooms.findById(roomDto.getId());
         Room room = opt.orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Room is not found"
